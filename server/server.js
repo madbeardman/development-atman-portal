@@ -7,6 +7,9 @@ const viewsPath = path.join(__dirname, '../views/partials');
 const express = require('express');
 const hbs = require('hbs');
 const fs = require('fs');
+const {mongoose} = require('.db/mongoose');
+const {Character} = require('.models/character.js');
+const {User} = require('.models/user');
 
 const port = process.env.PORT || 3000;
 
@@ -26,12 +29,12 @@ app.set('view engine', 'hbs');
 
 // and now our routes
 
-//create simple log to the screen
+//create simple log to the screen/file
 app.use((req, res, next) => {
     var currentDateTime = new Date();
     var logRecord = `${currentDateTime}: ${req.method} ${req.url}`
-
     var logFileName = 'logs/' + currentDateTime.getFullYear() + '_' + (currentDateTime.getMonth() + 1) + '_' + currentDateTime.getDate() + '.log';
+
     console.log(logRecord);
 
     fs.appendFile(logFileName, logRecord + '\n', (err) => {
@@ -49,6 +52,7 @@ app.use((req, res, next) => {
 
 app.use(express.static(publicPath));
 
+// Page gets
 app.get('/', (req, res) => {
     res.render('home.hbs', {
         pageTitle: 'Home Page',
