@@ -11,7 +11,9 @@ const characters = [{
 },
 {
     _id: new ObjectID(),
-    name: 'Gimli'
+    name: 'Gimli',
+    archived: true,
+    archivedAt: 333
 }];
 
 beforeEach((done) => {
@@ -81,7 +83,7 @@ describe('GET /characters/:id', () => {
             .get(`/characters/${characters[0]._id.toHexString()}`)
             .expect(200)
             .expect((res) => {
-                expect(res.body.character.name).toBe(characters[0].name);
+                expect(res.body.characters.name).toBe(characters[0].name);
             })
             .end(done);
     });
@@ -114,7 +116,7 @@ describe('DELETE /characters/:id', () => {
             .delete(`/characters/${charactersId}`)
             .expect(200)
             .expect((res) => {
-                expect(res.body.character._id).toBe(charactersId);
+                expect(res.body.characters._id).toBe(charactersId);
             })
             .end((err, res) => {
                 if (err) {
@@ -147,3 +149,34 @@ describe('DELETE /characters/:id', () => {
             .end(done);
     });     
 });
+
+describe('PATCH /characters/:id', () => {
+    it('Should update the character', (done) => {
+        var charactersId = characters[0]._id.toHexString();
+
+        request(app)
+            .patch(`/characters/${charactersId}`)
+            .send({ archived: true })
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.characters.archived).toBe(true);
+                expect(res.body.characters.archivedAt).toBeA('number');
+            })
+            .end(done);
+    });
+
+    it('Should clear archivedAt when the character is not archived', (done) => {
+        var charactersId = characters[1]._id.toHexString();
+
+        request(app)
+            .patch(`/characters/${charactersId}`)
+            .send({ archived: false })
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.characters.archived).toBe(false);
+                expect(res.body.characters.archivedAt).toNotExist();
+            })
+            .end(done);
+
+    });
+})
