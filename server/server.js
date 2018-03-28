@@ -7,9 +7,12 @@ const viewsPath = path.join(__dirname, '../views/partials');
 const express = require('express');
 const hbs = require('hbs');
 const fs = require('fs');
-const {mongoose} = require('./db/mongoose');
-const {Character} = require('./models/character');
-const {User} = require('./models/user');
+const bodyParser = require('body-parser');
+
+// Local Libraries
+const { mongoose } = require('./db/mongoose');
+const { Character } = require('./models/character');
+const { User } = require('./models/user');
 
 const port = process.env.PORT || 3000;
 
@@ -25,9 +28,9 @@ hbs.registerHelper('forceUpper', () => {
     return text.toUpperCase();
 });
 
+// let's configure Express
+app.use(bodyParser.json());
 app.set('view engine', 'hbs');
-
-// and now our routes
 
 //create simple log to the screen/file
 app.use((req, res, next) => {
@@ -50,6 +53,8 @@ app.use((req, res, next) => {
 //     res.render('maintenance.hbs');
 // });
 
+// and now our routes
+
 app.use(express.static(publicPath));
 
 // Page gets
@@ -69,6 +74,19 @@ app.get('/about', (req, res) => {
 app.get('/help', (req, res) => {
     res.render('help.hbs', {
         pageTitle: 'Help Page'
+    });
+});
+
+// API
+app.post('/characters', (req, res) => {
+    var character = new Character({
+        name: req.body.name
+    });
+
+    character.save().then((doc) => {
+        res.send(doc);
+    }, (e) => {
+        res.status(400).send(e);
     });
 });
 
