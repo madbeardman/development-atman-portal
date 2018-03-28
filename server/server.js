@@ -7,9 +7,9 @@ const viewsPath = path.join(__dirname, '../views/partials');
 const express = require('express');
 const hbs = require('hbs');
 const fs = require('fs');
-const {mongoose} = require('.db/mongoose');
-const {Character} = require('.models/character.js');
-const {User} = require('.models/user');
+const {mongoose} = require('./db/mongoose');
+const {Character} = require('./models/character');
+const {User} = require('./models/user');
 
 const port = process.env.PORT || 3000;
 
