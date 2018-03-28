@@ -6,3 +6,4 @@ API:
 >> POST /characters
 >> GET /characters
 >> GET /characters/:id
+>> DELETE /characters/:id
