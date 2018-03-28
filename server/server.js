@@ -1,13 +1,17 @@
+// Config
+require('./config/config');
+
 // Path
 const path = require('path');
 const publicPath = path.join(__dirname, '../public');
 
 // Libraries
 const express = require('express');
-const port = process.env.PORT || 3000;
 
 // App
 var app = express()
+
+const port = process.env.PORT;
 
 // Implement this from a config var
 // app.use((req, res, next) => {
