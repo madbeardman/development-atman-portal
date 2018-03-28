@@ -23,4 +23,12 @@ router.post('/characters', (req, res) => {
     });
 });
 
+router.get('/characters', (req, res) => {
+    Character.find().then((characters) => {
+        res.send({characters});
+    }, (e) => {
+        res.status(400).send(e);
+    });
+});
+
 module.exports = router;
