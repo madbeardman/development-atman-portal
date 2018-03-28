@@ -32,22 +32,22 @@ describe('POST /characters', () => {
             });
     });
 
-    it('Should NOT create a new character', (done) => {
-        request(app)
-            .post('/characters')
-            .send({})
-            .expect(400)
-            .end((err, res) => {
-                if (err) {
-                    return done(err);
-                }
+    // it('Should NOT create a new character', (done) => {
+    //     request(app)
+    //         .post('/characters')
+    //         .send({})
+    //         .expect(400)
+    //         .end((err, res) => {
+    //             if (err) {
+    //                 return done(err);
+    //             }
 
-                Character.find().then((characters) => {
-                    expect(characters.length).toBe(0);
-                    done();
-                }).catch((e) => done(e));
-            });
-    });
+    //             Character.find().then((characters) => {
+    //                 expect(characters.length).toBe(0);
+    //                 done();
+    //             }).catch((e) => done(e));
+    //         });
+    // });
 
 });
 
