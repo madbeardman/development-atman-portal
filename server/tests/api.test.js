@@ -86,7 +86,7 @@ describe('GET /characters/:id', () => {
             .end(done);
     });
 
-    it('Should return a 400 if character is not found', (done) => {
+    it('Should return a 404 if character is not found', (done) => {
 
         var invalidId = new ObjectID().toHexString();
 
@@ -96,7 +96,7 @@ describe('GET /characters/:id', () => {
             .end(done);
     });
 
-    it('Should return a 400 if character is not found', (done) => {
+    it('Should return a 404 if character is not found', (done) => {
 
         request(app)
             .get(`/characters/123`)
@@ -105,3 +105,45 @@ describe('GET /characters/:id', () => {
     });    
 });
 
+describe('DELETE /characters/:id', () => {
+    it('Should delete a single character', (done) => {
+
+        var charactersId = characters[0]._id.toHexString();
+
+        request(app)
+            .delete(`/characters/${charactersId}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.character._id).toBe(charactersId);
+            })
+            .end((err, res) => {
+                if (err) {
+                    return done(err);
+                }
+
+                Character.findById(charactersId).then((characters) => {
+                    expect(characters).toNotExist();
+                    done();
+                }).catch((e) => done(e));
+
+            });
+    });
+
+    it('Should return a 404 if character is not found', (done) => {
+
+        var invalidId = new ObjectID().toHexString();
+
+        request(app)
+            .delete(`/characters/${invalidId}`)
+            .expect(404)
+            .end(done);
+    });
+
+    it('Should return a 404 if character is not found', (done) => {
+
+        request(app)
+            .delete(`/characters/123`)
+            .expect(404)
+            .end(done);
+    });     
+});
