@@ -41,8 +41,13 @@ router.get('/characters/:id', (req, res) => {
     }
 
     Character.findById(id).then((character) => {
+        if (!character) {
+            return res.status(404).send();    
+        }
         res.send({ character });
     }, (e) => {
+        res.status(400).send(e);
+    }).catch((e) => {
         res.status(400).send(e);
     });
 });

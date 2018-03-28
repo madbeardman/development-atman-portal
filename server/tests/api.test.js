@@ -1,13 +1,16 @@
 const expect = require('expect');
 const request = require('supertest');
+const {ObjectID} = require('mongodb');
 
 const { app } = require('./../server');
 const { Character } = require('./../models/character');
 
 const characters = [{
+    _id: new ObjectID(),
     name: 'Gandalf'
 },
 {
+    _id: new ObjectID(),
     name: 'Gimli'
 }];
 
@@ -70,5 +73,35 @@ describe('GET /characters', () => {
             })
             .end(done);
     });
+});
+
+describe('GET /characters/:id', () => {
+    it('Should get a single character', (done) => {
+        request(app)
+            .get(`/characters/${characters[0]._id.toHexString()}`)
+            .expect(200)
+            .expect((res) => {
+                expect(res.body.character.name).toBe(characters[0].name);
+            })
+            .end(done);
+    });
+
+    it('Should return a 400 if character is not found', (done) => {
+
+        var invalidId = new ObjectID().toHexString();
+
+        request(app)
+            .get(`/characters/${invalidId}`)
+            .expect(404)
+            .end(done);
+    });
+
+    it('Should return a 400 if character is not found', (done) => {
+
+        request(app)
+            .get(`/characters/123`)
+            .expect(404)
+            .end(done);
+    });    
 });
 
