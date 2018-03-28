@@ -14,6 +14,14 @@ var Character = mongoose.model('Character', {
     level: {
         type: Number,
         default: 1
+    },
+    archived: {
+        type: Boolean,
+        default: false
+    },
+    archivedAt: {
+        type: Number,
+        default: null
     }
 });
 

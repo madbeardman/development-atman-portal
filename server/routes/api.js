@@ -1,6 +1,7 @@
 // Libraries
 const express = require('express');
 const { ObjectID } = require('mongodb');
+const _ = require('lodash');
 
 // Local Libraries
 const { mongoose } = require('./../db/mongoose');
@@ -40,11 +41,11 @@ router.get('/characters/:id', (req, res) => {
         return res.status(404).send();
     }
 
-    Character.findById(id).then((character) => {
-        if (!character) {
+    Character.findById(id).then((characters) => {
+        if (!characters) {
             return res.status(404).send();    
         }
-        res.send({ character });
+        res.send({ characters });
     }, (e) => {
         res.status(400).send(e);
     }).catch((e) => {
@@ -52,7 +53,10 @@ router.get('/characters/:id', (req, res) => {
     });
 });
 
-// Delete
+/**
+ * DELETE routes ================================================
+ */
+
 router.delete('/characters/:id', (req, res) => {
 
     var id = req.params.id;
@@ -61,18 +65,49 @@ router.delete('/characters/:id', (req, res) => {
         return res.status(404).send();
     }  
  
-    Character.findByIdAndRemove(id).then((character) => {
-        if (!character) {
+    Character.findByIdAndRemove(id).then((characters) => {
+        if (!characters) {
             return res.status(404).send();    
         }
-        res.send({ character });
+        res.send({ characters });
     }, (e) => {
         res.status(400).send(e);
     }).catch((e) => {
         res.status(400).send(e);
     });
-
-
 });
+
+/**
+ * PATCH routes ================================================
+ */
+router.patch('/characters/:id', (req, res) => {
+
+    var id = req.params.id;
+    var body = _.pick(req.body, ['name', 'system', 'level', 'archived']);
+
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+
+    if (_.isBoolean(body.archived) && body.archived) {
+        body.archivedAt = new Date().getTime();
+    } else {
+        body.archived = false;
+        body.archivedAt = null;
+    }
+ 
+    Character.findByIdAndUpdate(id, {$set: body}, {new: true}).then((characters) => {
+        if (!characters) {
+            return res.status(404).send();    
+        }
+        res.send({ characters });
+    }, (e) => {
+        res.status(400).send(e);
+    }).catch((e) => {
+        res.status(400).send(e);
+    });
+});
+
+
 
 module.exports = router;

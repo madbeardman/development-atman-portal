@@ -3,6 +3,7 @@ const path = require('path');
 const viewsPath = path.join(__dirname, '../../views/partials');
 
 // Libraries
+const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
 const hbs = require('hbs');
