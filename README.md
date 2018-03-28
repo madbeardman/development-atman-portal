@@ -2,3 +2,5 @@
 
 Simple nodejs application designed for use with Tabletop RPG's.
 
+API:
+>> POST /Characters
