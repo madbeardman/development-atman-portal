@@ -13,6 +13,11 @@ var app = express();
 var router = express.Router();
 
 // API
+/**
+ * ================================================
+ * CHARACTERS
+ * ================================================
+ */
 router.post('/characters', (req, res) => {
     var character = new Character({
         name: req.body.name
@@ -108,6 +113,20 @@ router.patch('/characters/:id', (req, res) => {
     });
 });
 
+/**
+ * ================================================
+ * USERS
+ * ================================================
+ */
+router.post('/users', (req, res) => {
+    var body = _.pick(req.body, ['email', 'password']);
+    var user = new User(body);
 
+    user.save().then((user) => {
+        res.send(user);
+    }).catch((e) => {
+        res.status(400).send(e);
+    });
+});
 
 module.exports = router;

@@ -13,3 +13,5 @@ API:
 
 >> PATCH /characters/:id
 
+>> POST /users
+
