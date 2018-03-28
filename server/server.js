@@ -22,19 +22,18 @@ hbs.registerHelper('forceUpper', () => {
     return text.toUpperCase();
 });
 
-app.set('view engine','hbs');
+app.set('view engine', 'hbs');
 
 // and now our routes
-app.use(express.static(publicPath));
 
 //create simple log to the screen
-app.use((req, res, next)=> {
+app.use((req, res, next) => {
     var currentDateTime = new Date();
     var logRecord = `${currentDateTime}: ${req.method} ${req.url}`
-    
-    var logFileName = 'logs/' + currentDateTime.getFullYear()+'_'+(currentDateTime.getMonth()+1)+'_'+currentDateTime.getDate() + '.log';
+
+    var logFileName = 'logs/' + currentDateTime.getFullYear() + '_' + (currentDateTime.getMonth() + 1) + '_' + currentDateTime.getDate() + '.log';
     console.log(logRecord);
-    
+
     fs.appendFile(logFileName, logRecord + '\n', (err) => {
         if (err) {
             console.log('Unable to write to the log file.');
@@ -42,6 +41,13 @@ app.use((req, res, next)=> {
     });
     next();
 });
+
+// Implement this from a config var
+// app.use((req, res, next) => {
+//     res.render('maintenance.hbs');
+// });
+
+app.use(express.static(publicPath));
 
 app.get('/', (req, res) => {
     res.render('home.hbs', {
@@ -66,4 +72,4 @@ app.listen(port, () => {
     console.log(`Started on port ${port}`);
 });
 
-module.exports = {app};
+module.exports = { app };
