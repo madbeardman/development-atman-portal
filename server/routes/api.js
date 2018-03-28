@@ -1,5 +1,6 @@
 // Libraries
 const express = require('express');
+const { ObjectID } = require('mongodb');
 
 // Local Libraries
 const { mongoose } = require('./../db/mongoose');
@@ -25,7 +26,22 @@ router.post('/characters', (req, res) => {
 
 router.get('/characters', (req, res) => {
     Character.find().then((characters) => {
-        res.send({characters});
+        res.send({ characters });
+    }, (e) => {
+        res.status(400).send(e);
+    });
+});
+
+router.get('/characters/:id', (req, res) => {
+
+    var id = req.params.id;
+
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+
+    Character.findById(id).then((character) => {
+        res.send({ character });
     }, (e) => {
         res.status(400).send(e);
     });
